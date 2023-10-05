@@ -6,7 +6,7 @@ library(clusterProfiler)
 library(tidyr)
 library(pheatmap)
 
-setwd("/Users/bmunn99/Desktop")
+setwd("~/Desktop")
 
 #import read counts generated from feature counts of all samples, ago, ddx23, and controls
 BioCC_input <- read.table(file = "P2_three_ctrls_transcript.txt", sep = "\t", header = T)
@@ -61,7 +61,7 @@ ago_genes <- ggplot(df_long, aes(x = geneid, y = logCPM, fill = group)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ago_genes
-ggsave("/Users/bmunn99/Desktop/logFC>1 P2 vs all ctrls/Figures/AGO_logCPM.png", ago_genes, dpi = 300, width = 12, height = 12)
+ggsave("~/AGO_logCPM.png", ago_genes, dpi = 300, width = 12, height = 12)
 
 ### Resume edgeR analysis
 # Adjust this filter for how many samples are being processed
@@ -111,14 +111,14 @@ ago3_P1_WT <- topTags(test, n=Inf)
 topTags(ago3_P1_WT)
 summary(dt_ago3_P1_WT_lrt<-decideTestsDGE(test,p.value = 0.05))
 
-write.table(ago3_P1_WT, file = "/Users/bmunn99/Desktop/logFC>1 P2 vs all ctrls/nextseq/P2_txt", sep = "\t")
+write.table(ago3_P1_WT, file = "~/P2_txt", sep = "\t")
 
 tmp <- as.data.frame(ago3_P1_WT)
 tmp$gene_id <- rownames(tmp)
 
 #generate biexponential rocket plot
 #import gencode annotation from local gtf file, subset it to only gene annotations and prep gene_id column
-gtf <- readGFF("/Users/bmunn99/gencode.v43.annotation.gtf")
+gtf <- readGFF("~/gencode.v43.annotation.gtf") # https://www.gencodegenes.org/human/release_43.html
 genes <- gtf %>%
   filter(type == "gene") %>%
   select(gene_name, gene_id)
@@ -131,14 +131,14 @@ tmp <- merge(tmp, genes, by="gene_id")
 # Filter out lowly expressed genes
 tmp <- tmp %>% filter(logCPM>7)
 # Write to csv
-write.table(tmp, file = "/Users/bmunn99/Desktop/logFC>1 P2 vs all ctrls/nextseq/P2_genenames.csv", sep = ",")
+write.table(tmp, file = "~/P2_genenames.csv", sep = ",")
 
 ### Exclude genes shared between P1 and ctrls_exclude_genes.txt
-exclude_genes <- read.table(file = "/Users/bmunn99/Desktop/logFC>1 ddx vs ago Ctrls/ctrls_exclude_genes.txt", sep = "\t", header = TRUE)
+exclude_genes <- read.table(file = "~/ctrls_exclude_genes.txt", sep = "\t", header = TRUE)
 tmp <- anti_join(tmp, exclude_genes, by = "gene_name")
 ### After filtering by logCPM for leafcutter, write out genes to exclude
 exclude_genes <- tmp %>% filter(-1>logFC | logFC>1) %>% count(gene_name) %>%
-  write.table(file = "/Users/bmunn99/Desktop/logFC>1 ddx vs ago Ctrls/ctrls_exclude_genes.txt", sep = "\t")
+  write.table(file = "~/ctrls_exclude_genes.txt", sep = "\t")
 
 
 
@@ -188,6 +188,7 @@ ggplot(data=tmp, aes(x=logFC, y=-log10(PValue), col=diffexpressed, label=delabel
 # Load library
 library(ggrepel)
 options(ggrepel.max.overlaps = Inf)
+
 ### To highlight particular genes in the volcano plot
 # Add a vector of the genes of interest
 cell_and_neuron_projection_genes <- c('ITGA3','SEMA3A','PLXNA2','ITGA6','LGALS1','PRRX1','PTPRG','SLIT2','SPOCK1','NTNG1','CFL1','TRAK1','MAGI2','LPAR1')
@@ -195,6 +196,7 @@ cell_projection_genes <- c('RALA', 'ARHGAP24', 'TENM2', 'EPS8', 'AUTS2', 'PFN1',
 # Create a column in tmp telling which genes to color
 cell_and_neuron_projection_genes_df <- tmp[tmp$gene_name %in% cell_and_neuron_projection_genes, ]
 cell_projection_genes_df <- tmp[tmp$gene_name %in% cell_projection_genes, ]
+
 # Plot adding up all layers we have seen so far
 plot_P2_three_ctrls <- ggplot(data=tmp, aes(x=logFC, y=-log10(PValue), col=diffexpressed, label=delabel)) +
   geom_point() +
@@ -209,9 +211,9 @@ plot_P2_three_ctrls <- plot_P2_three_ctrls +
   geom_point(data = cell_and_neuron_projection_genes_df, aes(x=logFC, y=-log10(PValue)), color = 'red', shape = 18, size = 3) +
   geom_point(data = cell_projection_genes_df, aes(x=logFC, y=-log10(PValue)), color = 'green', shape = 18, size = 3)
 plot_P2_three_ctrls
-ggsave('/Users/bmunn99/Desktop/logFC>1 P2 vs all ctrls/P2 three ctrls logCPM>7 volcano plot.png', plot_P2_three_ctrls, width = 10, height = 10, dpi = 300)
+ggsave('~/P2 three ctrls logCPM>7 volcano plot.png', plot_P2_three_ctrls, width = 10, height = 10, dpi = 300)
 # To convert dispersion plot to csv for GO Ontology
-write.csv(tmp, "/Users/bmunn99/Desktop/logFC>1 P2 vs all ctrls/nextseq/P2_dispersion.csv")
+write.csv(tmp, "~/P2_dispersion.csv")
 
 
 ### To merge logCPMs for each gene with leafcutter introns_clusters.txt
@@ -234,11 +236,11 @@ medians <- gene_counts_long %>%
 test <- merge(medians, genes, by = "gene_id")
 
 # Reassign <name>_intron_clusters to tmp and filter by deltapsi > 0
-tmp <- read.table(file = "/Users/bmunn99/Desktop/dPSI>.1 P2 vs all Ctrls/nextseq/P2_intron_clusters.txt", sep = "\t", header = TRUE)
+tmp <- read.table(file = "~/P2_intron_clusters.txt", sep = "\t", header = TRUE)
 tmp <- tmp %>%
   filter(deltapsi > 0)
 # Rename gene.y to gene_name and merge tmp with genes, then with test to generate csv with median CPMs
 tmp <- tmp %>% rename(gene_name=gene.y)
 merged_tmp <- merge(genes, tmp, by="gene_name")
 merged_lc <- merge(merged_tmp, test, by="gene_name")
-write.table(merged_lc, file="/Users/bmunn99/Desktop/dPSI>.1 P2 vs all Ctrls/nextseq/P2_lc_cpms.txt", sep = "\t")
+write.table(merged_lc, file="~/P2_lc_cpms.txt", sep = "\t")
