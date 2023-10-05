@@ -128,6 +128,8 @@ tmp$gene_id <- rownames(tmp)
 tmp$gene_id <- gsub("\\.\\d+", "", tmp$gene_id)
 rownames(tmp) <- NULL
 tmp <- merge(tmp, genes, by="gene_id")
+### If you wish to write to csv to use for bootstrapping the miRNAs targeting genes
+write.csv(tmp, '/Users/bmunn99/Desktop/P2 Data for Bootstrap/P2.csv', row.names = FALSE)
 # Filter out lowly expressed genes
 tmp <- tmp %>% filter(logCPM>7)
 # Write to csv
