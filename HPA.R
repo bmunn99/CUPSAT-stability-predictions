@@ -2,7 +2,7 @@
 library(ggplot2)
 library(dplyr)
 library(viridis)
-hpa <- read.table("/Users/bmunn99/Downloads/normal_tissue 2.tsv", sep = '\t', header = TRUE) # https://www.proteinatlas.org/about/download
+hpa <- read.table("~/normal_tissue.tsv", sep = '\t', header = TRUE) # https://www.proteinatlas.org/about/download
 
 # Filter rows with Gene.name == 'AGO3'
 hpa_filtered <- hpa[hpa$Gene.name == 'AGO3', ]
@@ -59,4 +59,4 @@ p <- ggplot(hpa_filtered, aes(x=Tissue, y=Level, fill=Tissue.group)) +
         axis.title.x = element_text(size = 16),
         axis.title.y = element_text(size = 16)) 
 p
-ggsave("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/HPA AGO3.png", p, width = 10, height = 10, dpi = 300)
+ggsave("~/HPA AGO3.png", p, width = 10, height = 10, dpi = 300)
