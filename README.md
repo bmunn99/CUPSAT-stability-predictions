@@ -1,5 +1,5 @@
-# Clemson-Grad-scripts
-All the scripts I used during my time as a grad student at Clemson University
+# Clemson-Grad-R-scripts
+All the R scripts I used during my time as a grad student at Clemson University
 1) Stability Predictions
 2) Western blot quantification
 3) Alternative splicing analysis
