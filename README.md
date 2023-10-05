@@ -7,3 +7,4 @@ All the scripts I used during my time as a grad student at Clemson University
 5) RNA-seq analysis w/ edgeR
 6) Pearson correlation for structure probing
 7) Protein expression from Human Protein Atlas
+8) Bootstrapping miRNAs enriched in target genes
