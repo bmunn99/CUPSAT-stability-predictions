@@ -5,13 +5,13 @@ library(rtracklayer)
 library(clusterProfiler)
 
 # Use leafviz to quickly visualize splicing, including sashimi plots
-leafviz("/Users/Desktop/RData/P1_P2.RData")
+leafviz("~/P1_P2.RData")
 
 # Merge clusters and introns
 P2_intron_clusters <- merge(clusters, introns, by = "clusterID")
 
 # Write to .txt to load with RNA-seq, where you'll create a CPM column
-write.table(P2_intron_clusters, file = "/Users/Desktop/dPSI>.1 P1&P2 vs all ctrls/P1_P2_intron_clusters.txt", sep = "\t")
+write.table(P2_intron_clusters, file = "~/P1_P2_intron_clusters.txt", sep = "\t")
 # To quickly graph your clusters
 ggplot(P2_intron_clusters, aes(x = deltapsi, y = -log10(FDR))) +
   geom_point() +
@@ -19,11 +19,11 @@ ggplot(P2_intron_clusters, aes(x = deltapsi, y = -log10(FDR))) +
 tmp <- P2_intron_clusters
 
 ### Only run after merging median cpms for lc file
-P2_intron_clusters <- read.table(file = "/Users/Desktop/dPSI>.1 P2 vs all ctrls/P2_lc_cpms.txt", sep = "\t", header = TRUE)
+P2_intron_clusters <- read.table(file = "~/P2_lc_cpms.txt", sep = "\t", header = TRUE)
 # Filter lowly expressed genes
 tmp <- P2_intron_clusters %>% filter(medians>7)
 # If you have a list of genes you'd like to exclude
-exclude_genes <- read.table(file = "/Users/Desktop/dPSI>.1 lc ddx vs ago ctrls/ctrls_exclude_genes.txt", sep = "\t", header = TRUE)
+exclude_genes <- read.table(file = "~/ctrls_exclude_genes.txt", sep = "\t", header = TRUE)
 tmp <- anti_join(tmp, exclude_genes, by = "gene_name")
 
 # If you want to filter only for Up regulated genes
@@ -86,8 +86,8 @@ plot2 <- ggplot(data=tmp, aes(x=deltapsi, y=-log10(FDR), col=diffexpressed, labe
   ggtitle(NULL) + theme(plot.title = element_text(size = 24)) + theme(plot.title = element_text(hjust = 0.5)) +
   coord_cartesian(xlim = c(min(tmp$deltapsi), max(1)))  # Adjust x-axis range
 plot2
-ggsave('/Users/Desktop/dPSI>.1 P2 vs all ctrls/P2 ago ddx logCPM>7 volcano plot.png', plot2, width = 10, height = 10, dpi = 300)
+ggsave('~/P2 ago ddx logCPM>7 volcano plot.png', plot2, width = 10, height = 10, dpi = 300)
 # To convert dispersion plot to csv for GO Ontology
-write.csv(tmp, "/Users/Desktop/dPSI>.1 P1&P2 vs all Ctrls/P1_P2_lc_dispersion.csv")
+write.csv(tmp, "~/P1_P2_lc_dispersion.csv")
 
 
