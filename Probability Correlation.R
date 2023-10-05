@@ -3,10 +3,10 @@ library(dplyr)
 
 # You must first create dot plots of your SHAPE data using rnastructure's "Fold" and "ct2dot" commands https://rna.urmc.rochester.edu/Text/index.html
 # Load the dot plots
-AGO3_WT_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_WT.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_E638A_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_E638A.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_P2_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_P2.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_P1_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_P1.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_WT_dp <- read.table("~/AGO3_WT.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_E638A_dp <- read.table("~/AGO3_E638A.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_P2_dp <- read.table("~/AGO3_P2.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_P1_dp <- read.table("~/AGO3_P1.dp", header=TRUE, skip=1) # adjust skip as necessary
 
 # Rename the log10 column to Probability
 AGO3_WT_dp <- AGO3_WT_dp %>%
