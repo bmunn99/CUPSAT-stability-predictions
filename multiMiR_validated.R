@@ -29,7 +29,7 @@ merged_df <- merge(predicted_mirnas, summed_mirna_occurrences, by = "mature_mirn
 # Keep only the necessary columns
 merged_df <- merged_df[, c("mature_mirna_id", "target_symbol", "total_occurrences")]
 # Write to csv the unique mirnas that are unfiltered
-write.csv(merged_df, "/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Development/unique_mirnas_unfiltered.csv", row.names = FALSE)
+write.csv(merged_df, "~/unique_mirnas_unfiltered.csv", row.names = FALSE)
 # Filter by mirnas with occurrences >= 5
 merged_df <- merged_df %>%
   filter(total_occurrences >= 5)
@@ -37,6 +37,6 @@ unique_mirnas <- merged_df %>%
   select(mature_mirna_id, total_occurrences) %>%
   distinct(mature_mirna_id, total_occurrences)
 # Write to csv the unique mirnas filtered by >=5 occurrences
-write.csv(unique_mirnas, "/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Development/unique_mirnas.csv", row.names = FALSE)
+write.csv(unique_mirnas, "~/unique_mirnas.csv", row.names = FALSE)
 # Write to csv the mirnas targeting target genes and their occurrences
-write.csv(merged_df, file = "/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Development/ECM_mirnas.csv", row.names = FALSE)
+write.csv(merged_df, file = "~/ECM_mirnas.csv", row.names = FALSE)
