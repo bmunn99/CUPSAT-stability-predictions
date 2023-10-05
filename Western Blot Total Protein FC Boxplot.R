@@ -4,7 +4,7 @@ library(RColorBrewer)
 
 # Load in csv containing densities of western blots
 # Must contain three columns: 1) Source, 2) Sample, 3) Density
-df <- read.csv('/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Western Blots/Densities.csv', header = TRUE)
+df <- read.csv('~/Densities.csv', header = TRUE)
 df$Sample <- factor(df$Sample, levels=c('WT', 'E638A', 'P1', 'P2'))
 # Plot the data in a boxplot
 p <- ggplot(df, aes(x=Sample, y=Density, fill=Sample)) + 
@@ -24,5 +24,5 @@ p <- ggplot(df, aes(x=Sample, y=Density, fill=Sample)) +
                position=position_dodge(width=0.8)) + # Display mean value
   scale_fill_brewer(palette = 'Set3')
 p
-ggsave('/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Western Blots/Densities.png', p, height = 10, width = 10, dpi = 300)
+ggsave('~/Densities.png', p, height = 10, width = 10, dpi = 300)
 
