@@ -4,12 +4,12 @@ library(ggplot2)
 library(tidyr)
 library(ggpubr)
 
-# Read in P2 DGE and lc data
+# Read in P2 DGE and lc data from "RNA-seq with edgeR" script, created w/o logCPM filter
 P2 <- read.csv("/Users/bmunn99/Desktop/P2 Data for Bootstrap/P2.csv", sep = ',', header = TRUE) 
 # Read in miRTarBase data
 miRNA_data <- read.csv("/Users/bmunn99/Desktop/hsa_MTI.csv", sep = ',', header = TRUE)
 # Read in ECM_mirnas.csv
-ECM_mirnas <- read.csv("/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Development/unique_mirnas_unfiltered.csv", sep = ',', header = TRUE)
+ECM_mirnas <- read.csv("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/unique_mirnas_unfiltered.csv", sep = ',', header = TRUE)
 # Rename "mature_mirna_id" column in dataframes to "miRNA"
 colnames(ECM_mirnas)[colnames(ECM_mirnas) == "mature_mirna_id"] <- "miRNA"
 # Rename "target_symbol" column in dataframes to "Target Gene"
@@ -32,7 +32,7 @@ get_mirnas <- function(gene) {
 random_bootstrap_top10_avg <- function(data, n) {
   replicate(n, {
     # Step 1: Sample 15 genes.
-    genes <- sample(unique(data$gene_name), 14)
+    genes <- sample(unique(data$gene_name), 14) # Sample the amount of genes you have
     
     # Step 2: Add miRNA column.
     df <- data.frame(gene_name = genes) %>%
@@ -64,12 +64,12 @@ random_bootstrap_P2_top10 <- random_bootstrap_P2_top10 %>%
 # Bootstrap function for known miRNAs
 filtered_bootstrap_top10_avg <- function(data, n) {
   # List of specific miRNAs to keep
-  selected_miRNAs <- c('hsa-miR-124-3p','hsa-miR-107','hsa-miR-129-2-3p','hsa-let-7b-5p','hsa-miR-1-3p',
-                       'hsa-miR-155-5p','hsa-miR-16-5p','hsa-miR-182-5p','hsa-miR-101-3p','hsa-miR-103a-3p')
+  selected_miRNAs <- c('hsa-miR-129-2-3p','hsa-miR-1-3p','hsa-miR-124-3p','hsa-let-7b-5p','hsa-miR-107',
+                       'hsa-miR-155-5p','hsa-miR-101-3p','hsa-miR-182-5p','hsa-miR-103a-3p','hsa-miR-16-5p')
   
   replicate(n, {
     # Step 1: Sample 15 genes.
-    genes <- sample(unique(data$gene_name), 14)
+    genes <- sample(unique(data$gene_name), 14) # Sample the amount of genes you have
     
     # Step 2: Add miRNA column.
     df <- data.frame(gene_name = genes) %>%
@@ -95,8 +95,8 @@ filtered_bootstrap_P2_top10 <- filtered_bootstrap_top10_avg(P2, 1000) %>%
   mutate(Source = 'Filtered_P2')
 
 # Prepare the ECM_mirnas data
-selected_miRNAs <- c('hsa-miR-124-3p','hsa-miR-107','hsa-miR-129-2-3p','hsa-let-7b-5p','hsa-miR-1-3p',
-                     'hsa-miR-155-5p','hsa-miR-16-5p','hsa-miR-182-5p','hsa-miR-101-3p','hsa-miR-103a-3p')
+selected_miRNAs <- c('hsa-miR-129-2-3p','hsa-miR-1-3p','hsa-miR-124-3p','hsa-let-7b-5p','hsa-miR-107',
+                     'hsa-miR-155-5p','hsa-miR-101-3p','hsa-miR-182-5p','hsa-miR-103a-3p','hsa-miR-16-5p')
 ECM_mirnas <- ECM_mirnas %>%
   filter(miRNA %in% selected_miRNAs)
 ECM_mirnas <- ECM_mirnas %>%
@@ -153,17 +153,6 @@ new_filtered_bootstrap_P2_top10 <- new_filtered_bootstrap_P2_top10 %>%
   
 ### To compare top 10 ECM mirnas vs random top 10 mirnas from bootstrap
 # P2
-ECM_mirnas <- ECM_mirnas %>%
-  filter(miRNA %in% selected_miRNAs)
-ECM_mirnas <- ECM_mirnas %>%
-  dplyr::select(miRNA, total_occurrences) %>%
-  mutate(Source = 'ECM_mirnas')
-# Remove duplicate rows so each row represents a single miRNA with the total_occurrences column intact
-ECM_mirnas <- ECM_mirnas %>%
-  distinct()
-ECM_mirnas <- ECM_mirnas %>%
-  mutate(miRNA = 'average')
-
 # Bind the bootstrap dataframes together
 all_data <- rbind(random_bootstrap_P2_top10, ECM_mirnas)
 
@@ -175,44 +164,34 @@ n_P2 <- all_data %>%
 # Plot
 p2 <- ggplot(all_data, aes(x = Source, y = total_occurrences)) + 
   geom_jitter(data = subset(all_data, Source == "Random_P2"), width = 0.3, alpha = 0.3, aes(color = Source)) +
-  stat_summary(fun = mean, geom = "point", shape = 23, size = 3, color = "red", fill = "red") +
-  stat_summary(fun.data = function(y) data.frame(y = mean(y), size = 5, label = round(mean(y), 2)), geom = "text", vjust = -1.5) +
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, color = "red", fill = "red") +
+  stat_summary(fun.data = function(y) data.frame(y = mean(y), size = 6, label = round(mean(y), 2)), geom = "text", vjust = -1.5) +
   theme_minimal() +
   labs(title = NULL, y = 'Average Occurrences', x = NULL) +
   theme(
     legend.position = "none",
-    axis.text.x = element_text(size = 14),
-    axis.text.y = element_text(size = 14),
-    axis.title.y = element_text(size = 14)) +
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20),
+    axis.title.y = element_text(size = 20)) +
   geom_signif(comparisons = list(c('Random_P2', 'ECM_mirnas')),
               map_signif_level = TRUE,
-              textsize = 3.5,
+              textsize = 5,
               vjust = -0) +
   geom_signif(comparisons = list(c("Random_P2", "ECM_mirnas")), 
               map_signif_level = FALSE, 
               tip_length = 0, 
-              textsize = 3.5, 
+              textsize = 5, 
               vjust = -1.5) +
-  scale_x_discrete(labels = c('ECM_mirnas' = 'Neuron Projection miRNAs', 'Random_P2' = 'Random P2')) +
-  annotate("text", x = n_P2$Source, y = 22, label = paste("n =", n_P2$n), color = "black")
+  scale_x_discrete(labels = c('ECM_mirnas' = 'Cell Projection miRNAs', 'Random_P2' = 'Random P2')) +
+  scale_y_continuous(limits = c(2.5, 15)) +
+  annotate("text", x = n_P2$Source, y = 14, label = paste("n =", n_P2$n), color = "black", size = 5)
 p2
-ggsave("/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Development/Comparison of ECM miRNAs vs. Random P2.png", p2, width = 10, height = 10, dpi = 300)
+ggsave("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/Comparison of ECM miRNAs vs. Random P2.png", p2, width = 10, height = 10, dpi = 300)
 
 
 
 ### To compare top 10 ECM mirnas in P2 vs top 10 mirnas from a sampling of a bootstrap in P2
 # P2
-ECM_mirnas <- ECM_mirnas %>%
-  filter(miRNA %in% selected_miRNAs)
-ECM_mirnas <- ECM_mirnas %>%
-  dplyr::select(miRNA, total_occurrences) %>%
-  mutate(Source = 'ECM_mirnas')
-# Remove duplicate rows so each row represents a single miRNA with the total_occurrences column intact
-ECM_mirnas <- ECM_mirnas %>%
-  distinct()
-ECM_mirnas <- ECM_mirnas %>%
-  mutate(miRNA = 'average')
-
 # Bind the bootstrap dataframes together
 all_data <- rbind(filtered_bootstrap_P2_top10, new_filtered_bootstrap_P2_top10)
 
@@ -221,29 +200,42 @@ n_P2 <- all_data %>%
   group_by(Source) %>%
   summarise(n = n())
 
+# Compute the IQR and the lower and upper thresholds for outliers
+Q1 <- quantile(all_data$total_occurrences, 0.25)
+Q3 <- quantile(all_data$total_occurrences, 0.75)
+IQR <- Q3 - Q1
+
+lower_threshold <- Q1 - 1.5 * IQR
+upper_threshold <- Q3 + 1.5 * IQR
+
+# Filter the data
+all_data <- all_data %>%
+  filter(total_occurrences >= lower_threshold & total_occurrences <= upper_threshold)
+
 # Plot
 p2 <- ggplot(all_data, aes(x = Source, y = total_occurrences)) + 
-  geom_jitter(data = subset(all_data, Source == "new_Filtered_P2"), width = 0.3, alpha = 0.3, aes(color = Source)) +
-  stat_summary(fun = mean, geom = "point", shape = 23, size = 3, color = "red", fill = "red") +
-  stat_summary(fun.data = function(y) data.frame(y = mean(y), size = 5, label = round(mean(y), 2)), geom = "text", vjust = -1.5) +
+  geom_jitter(data = subset(all_data, Source == "new_Filtered_P2"), width = 0.3, alpha = 0.3, aes(color = Source), ) +
+  stat_summary(fun = mean, geom = "point", shape = 23, size = 4, color = "red", fill = "red") +
+  stat_summary(fun.data = function(y) data.frame(y = mean(y), size = 6, label = round(mean(y), 2)), geom = "text", vjust = -1.5) +
   theme_minimal() +
   labs(title = NULL, y = 'Average Occurrences', x = NULL) +
   theme(
     legend.position = "none",
-    axis.text.x = element_text(size = 14),
-    axis.text.y = element_text(size = 14),
-    axis.title.y = element_text(size = 14)) +
+    axis.text.x = element_text(size = 20),
+    axis.text.y = element_text(size = 20),
+    axis.title.y = element_text(size = 20)) +
   geom_signif(comparisons = list(c('new_Filtered_P2', 'Filtered_P2')),
               map_signif_level = TRUE,
-              textsize = 3.5,
-              vjust = -0) +
+              textsize = 5,
+              vjust = 0) +
   geom_signif(comparisons = list(c("new_Filtered_P2", "Filtered_P2")), 
               map_signif_level = FALSE, 
               tip_length = 0, 
-              textsize = 3.5, 
+              textsize = 5, 
               vjust = -1.5) +
-  scale_x_discrete(labels = c('Filtered_P2' = 'Neuron Projection miRNAs in P2', 'new_Filtered_P2' = 'Random miRNAs in P2')) +
-  annotate("text", x = n_P2$Source, y = 16, label = paste("n =", n_P2$n), color = "black")
+  scale_x_discrete(labels = c('Filtered_P2' = 'Cell Projection miRNAs in P2', 'new_Filtered_P2' = 'Random miRNAs in P2')) +
+  scale_y_continuous(limits = c(0, 18)) +
+  annotate("text", x = n_P2$Source, y = 16, label = paste("n =", n_P2$n), color = "black", size = 5) 
 p2
-ggsave("/Users/bmunn99/Desktop/P2 Pathways/Neuron Projection Organization/Top ECM miRNAs in P1 vs Top Random miRNAs in P2.png", p2, width = 10, height = 10, dpi = 300)
+ggsave("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/Top ECM miRNAs in P1 vs Top Random miRNAs in P2.png", p2, width = 10, height = 10, dpi = 300)
 
