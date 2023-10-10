@@ -3,10 +3,10 @@ library(dplyr)
 
 # You must first create dot plots of your SHAPE data using rnastructure's "Fold" and "ct2dot" commands https://rna.urmc.rochester.edu/Text/index.html
 # Load the dot plots
-AGO3_WT_dp <- read.table("~/AGO3_WT.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_E638A_dp <- read.table("~/AGO3_E638A.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_P2_dp <- read.table("~/AGO3_P2.dp", header=TRUE, skip=1) # adjust skip as necessary
-AGO3_P1_dp <- read.table("~/AGO3_P1.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_WT_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_WT.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_E638A_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_E638A.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_P2_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_P2.dp", header=TRUE, skip=1) # adjust skip as necessary
+AGO3_P1_dp <- read.table("/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_P1.dp", header=TRUE, skip=1) # adjust skip as necessary
 
 # Rename the log10 column to Probability
 AGO3_WT_dp <- AGO3_WT_dp %>%
@@ -32,8 +32,14 @@ region_P2 <- AGO3_P2_dp[AGO3_P2_dp$i >= 750 & AGO3_P2_dp$i <= 790, ]
 # Step 2: Merge the two filtered data frames and/or RNAs to compare based on 'i' and 'j'
 merged_region <- merge(region_WT, region_P2, by = c("i", "j"), suffixes = c("_WT", "_P2"))
 AGO3_WT_E638A <- merge(AGO3_WT_dp, AGO3_E638A_dp, by = c('i', 'j'), suffixes = c('_WT', "_E638A"))
+# Write to csv
+write.csv(AGO3_WT_E638A, '/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_WT_E638A.csv', row.names = FALSE)
 AGO3_WT_P2 <- merge(AGO3_WT_dp, AGO3_P2_dp, by = c('i', 'j'), suffixes = c('_WT', "_P2"))
+# Write to csv
+write.csv(AGO3_WT_P2, '/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_WT_P2.csv', row.names = FALSE)
 AGO3_WT_P1 <- merge(AGO3_WT_dp, AGO3_P1_dp, by = c('i', 'j'), suffixes = c('_WT', "_P1"))
+# Write to csv
+write.csv(AGO3_WT_P1, '/Users/bmunn99/Desktop/SHAPE/Nextseq/rnastructure/AGO3_WT_P1.csv', row.names = FALSE)
 
 # Step 3: Compute the correlation between the 'Probability' columns
 merged_region_correlation_value <- cor(merged_region$Probability_WT, merged_region$Probability_P2, method = "pearson", use = "complete.obs")
