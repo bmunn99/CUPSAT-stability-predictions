@@ -6,6 +6,7 @@ library(clusterProfiler)
 library(tidyr)
 library(pheatmap)
 
+# Set your working directory
 setwd("~/Desktop")
 
 #import read counts generated from feature counts of all samples, ago, ddx23, and controls
@@ -13,7 +14,7 @@ BioCC_input <- read.table(file = "P2_three_ctrls_transcript.txt", sep = "\t", he
 rownames(BioCC_input) <- BioCC_input$Geneid
 BioCC_input[,1:6] <- NULL
 
-### Skip to line 66
+### Skip to line 67
 ### Only if you want to extract logCPMs and particular genes
 keep_genes <- rowSums(cpm(BioCC_input) > 1) >= 2
 counts_matrix_filtered <- BioCC_input[keep_genes, ]
@@ -78,6 +79,7 @@ dim(rpk)
 head(rpk)
 
 #set groups
+# Groups are for contrast statements. Usually will be samples vs. controls
 Groups <- as.factor(c(rep("NA", 1), rep("ctrls", 5), rep("ago", 3), rep("ctrls", 3)))
 
 rpk.norm.g <- DGEList(counts = rpk, group = Groups)
@@ -111,12 +113,10 @@ ago3_P1_WT <- topTags(test, n=Inf)
 topTags(ago3_P1_WT)
 summary(dt_ago3_P1_WT_lrt<-decideTestsDGE(test,p.value = 0.05))
 
+# Write to text file with FDRs, logFC, logCPM, PValue, and LR
 write.table(ago3_P1_WT, file = "~/P2_txt", sep = "\t")
 
-tmp <- as.data.frame(ago3_P1_WT)
-tmp$gene_id <- rownames(tmp)
-
-#generate biexponential rocket plot
+# Annotate gene names using a gencode annotation file
 #import gencode annotation from local gtf file, subset it to only gene annotations and prep gene_id column
 gtf <- readGFF("~/gencode.v43.annotation.gtf") # https://www.gencodegenes.org/human/release_43.html
 genes <- gtf %>%
@@ -130,12 +130,13 @@ rownames(tmp) <- NULL
 tmp <- merge(tmp, genes, by="gene_id")
 ### If you wish to write to csv to use for bootstrapping the miRNAs targeting genes
 write.csv(tmp, '/Users/bmunn99/Desktop/P2 Data for Bootstrap/P2.csv', row.names = FALSE)
+
 # Filter out lowly expressed genes
-tmp <- tmp %>% filter(logCPM>7)
+tmp <- tmp %>% filter(logCPM>7) # Change based on project goals
 # Write to csv
 write.table(tmp, file = "~/P2_genenames.csv", sep = ",")
 
-### Exclude genes shared between P1 and ctrls_exclude_genes.txt
+### Exclude genes shared between P2 and ctrls_exclude_genes.txt
 exclude_genes <- read.table(file = "~/ctrls_exclude_genes.txt", sep = "\t", header = TRUE)
 tmp <- anti_join(tmp, exclude_genes, by = "gene_name")
 ### After filtering by logCPM for leafcutter, write out genes to exclude
