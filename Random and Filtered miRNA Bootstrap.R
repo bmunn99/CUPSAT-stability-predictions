@@ -5,11 +5,11 @@ library(tidyr)
 library(ggpubr)
 
 # Read in P2 DGE and lc data from "RNA-seq with edgeR" script, created w/o logCPM filter
-P2 <- read.csv("/Users/bmunn99/Desktop/P2 Data for Bootstrap/P2.csv", sep = ',', header = TRUE) 
+P2 <- read.csv("~/P2.csv", sep = ',', header = TRUE) 
 # Read in miRTarBase data
-miRNA_data <- read.csv("/Users/bmunn99/Desktop/hsa_MTI.csv", sep = ',', header = TRUE)
+miRNA_data <- read.csv("~/hsa_MTI.csv", sep = ',', header = TRUE)
 # Read in ECM_mirnas.csv
-ECM_mirnas <- read.csv("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/unique_mirnas_unfiltered.csv", sep = ',', header = TRUE)
+ECM_mirnas <- read.csv("~/unique_mirnas_unfiltered.csv", sep = ',', header = TRUE)
 # Rename "mature_mirna_id" column in dataframes to "miRNA"
 colnames(ECM_mirnas)[colnames(ECM_mirnas) == "mature_mirna_id"] <- "miRNA"
 # Rename "target_symbol" column in dataframes to "Target Gene"
@@ -180,7 +180,7 @@ p2 <- ggplot(all_data, aes(x = Source, y = total_occurrences)) +
   scale_x_discrete(labels = c('ECM_mirnas' = 'CPG miRNAs vs. CPGs', 'Random_P2' = 'miRNAs vs. Random Genes')) +
   scale_y_continuous(limits = c(2.5, 15))
 p2
-ggsave("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/Comparison of ECM miRNAs vs. Random P2.png", p2, width = 10, height = 10, dpi = 300)
+ggsave("~/Comparison of ECM miRNAs vs. Random P2.png", p2, width = 10, height = 10, dpi = 300)
 
 
 
@@ -213,5 +213,5 @@ p2 <- ggplot(all_data, aes(x = Source, y = total_occurrences)) +
   scale_x_discrete(labels = c('ECM_mirnas' = 'CPG miRNAs vs. CPGs', 'Filtered_P2' = 'CPG miRNAs vs. Random Genes')) +
   scale_y_continuous(limits = c(0, 16))
 p2
-ggsave("/Users/bmunn99/Desktop/P2 Pathways/Cell Projection Development/Top ECM miRNAs in P2 vs Top Random miRNAs in P2.png", p2, width = 10, height = 10, dpi = 300)
+ggsave("~/Top ECM miRNAs in P2 vs Top Random miRNAs in P2.png", p2, width = 10, height = 10, dpi = 300)
 
