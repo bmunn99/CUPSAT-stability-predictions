@@ -2,7 +2,7 @@ library(ggplot2)
 library(tidyverse)
 ### Amino acid change
 # Read in data from CUPSAT predictions: https://cupsat.brenda-enzymes.org/
-df <- read.csv("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Additional Files/CUPSAT predictions.csv", sep = ',', header = TRUE)
+df <- read.csv("~/CUPSAT predictions.csv", sep = ',', header = TRUE)
 # Remove "C" from the chain column
 df <- df %>%
   filter(Chain != "C")
@@ -32,7 +32,7 @@ plot <- ggplot(df, aes(x=Residue.ID, y=normalized_delta_G, color=Amino.acid)) +
   labs(x="Residue ID", y="Localized Z-Score", color="Amino Acid Change")  
 plot
 # Save the plot
-ggsave("/Users/bmunn99/Desktop/Alignments/CUPSAT Predictions Localized AGO3.png", plot, width = 10, height = 10, dpi = 300)
+ggsave("~/CUPSAT Predictions Localized AGO3.png", plot, width = 10, height = 10, dpi = 300)
 
 
 ### P2
@@ -65,7 +65,7 @@ plot2 <- ggplot(df_subset, aes(x=Residue.ID, y=normalized_delta_G, color=color, 
   scale_y_continuous(limits = c(-2, 2))
 plot2
 # Save the plot
-ggsave("/Users/bmunn99/Desktop/Alignments/CUPSAT Localized 225.png", plot2, width = 10, height = 10, dpi = 300)
+ggsave("~/CUPSAT Localized 225.png", plot2, width = 10, height = 10, dpi = 300)
 
 
 ### P1
@@ -98,7 +98,7 @@ plot3 <- ggplot(df_subset, aes(x=Residue.ID, y=normalized_delta_G, color=color, 
   scale_y_continuous(limits = c(-2, 2))
 plot3
 # Save the plot
-ggsave("/Users/bmunn99/Desktop/Alignments/CUPSAT Localized 507.png", plot3, width = 10, height = 10, dpi = 300)
+ggsave("~/CUPSAT Localized 507.png", plot3, width = 10, height = 10, dpi = 300)
 
 
 
@@ -131,4 +131,4 @@ plot4 <- ggplot(df_subset, aes(x=Residue.ID, y=normalized_delta_G, color=color, 
   scale_y_continuous(limits = c(-2, 2))
 plot4
 # Save the plot
-ggsave("/Users/bmunn99/Desktop/Alignments/CUPSAT Localized 638.png", plot4, width = 10, height = 10, dpi = 300)
+ggsave("~/CUPSAT Localized 638.png", plot4, width = 10, height = 10, dpi = 300)
