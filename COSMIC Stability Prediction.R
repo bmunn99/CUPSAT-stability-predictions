@@ -2,7 +2,7 @@ library(ggplot2)
 library(tidyverse)
 
 # Load in data from COSMIC
-cosmic_data <- read.csv("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Additional Files/COSMIC AGO3 variants.csv", sep = ',', header = TRUE)
+cosmic_data <- read.csv("~/COSMIC AGO3 variants.csv", sep = ',', header = TRUE)
 highlight_positions <- c(225, 507, 638)
 # Graph the data by position and counts
 p <- ggplot(cosmic_data, aes(x=Position, y=Count)) +
@@ -16,7 +16,7 @@ p <- ggplot(cosmic_data, aes(x=Position, y=Count)) +
     axis.text.y = element_text(size = 20),
     axis.text.x = element_text(size = 20))# Optional theme for cleaner look
 print(p)  # Display the plot
-ggsave("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Sequence Predictions/COSMIC_whole.png", height = 5, width = 10, p, dpi = 300)
+ggsave("~/COSMIC_whole.png", height = 5, width = 10, p, dpi = 300)
 
 ### E638A
 # Filter to include only the residues of interest
@@ -33,7 +33,7 @@ p2 <- ggplot(cosmic_subset, aes(x=Position, y=Count)) +
     axis.text.y = element_text(size = 20),
     axis.text.x = element_text(size = 20))# Optional theme for cleaner look
 p2
-ggsave("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Sequence Predictions/COSMIC_638.png", p2, dpi = 300)
+ggsave("~/COSMIC_638.png", p2, dpi = 300)
 
 ### P1
 # Filter to include only the residues of interest
@@ -50,7 +50,7 @@ p3 <- ggplot(cosmic_subset, aes(x=Position, y=Count)) +
     axis.text.y = element_text(size = 20),
     axis.text.x = element_text(size = 20))# Optional theme for cleaner look
 p3
-ggsave("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Sequence Predictions/COSMIC_507.png", p3, height = 10, width = 10, dpi = 300)
+ggsave("~/COSMIC_507.png", p3, height = 10, width = 10, dpi = 300)
 
 ### P2
 # Filter to include only the residues of interest
@@ -67,4 +67,4 @@ p4 <- ggplot(cosmic_subset, aes(x=Position, y=Count)) +
     axis.text.y = element_text(size = 20),
     axis.text.x = element_text(size = 20))# Optional theme for cleaner look
 p4
-ggsave("/Users/bmunn99/OneDrive/Clemson/Thesis Figures/Sequence Predictions/COSMIC_225.png", p4, height = 10, width = 10, dpi = 300)
+ggsave("~/COSMIC_225.png", p4, height = 10, width = 10, dpi = 300)
