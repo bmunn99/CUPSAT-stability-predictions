@@ -4,7 +4,7 @@ library(enrichplot)
 library(ggplot2)
 
 # Read in a df of gene names from Excel
-gene_df <- read.csv('/Users/bmunn99/Desktop/P2 diff expressed genes.csv', header = FALSE)
+gene_df <- read.csv('~/P2 diff expressed genes.csv', header = FALSE)
 # Convert to a list
 gene_list <- as.list(gene_df$V1)
 
@@ -56,6 +56,6 @@ lollipop <- ggplot(df, aes(x=reorder(Description, GeneCount), y=GeneCount)) +
         legend.title = element_text(size = 20),
         legend.text = element_text(size = 16))
 lollipop
-ggsave('/Users/bmunn99/OneDrive/Clemson/Thesis Figures/RNA-seq/Lollipop from R.png', lollipop, dpi = 300)
+ggsave('~/Lollipop from R.png', lollipop, dpi = 300)
 
-write.csv(df, '/Users/bmunn99/OneDrive/Clemson/Thesis Figures/RNA-seq/GO.csv', row.names = TRUE)
+write.csv(df, '~/GO.csv', row.names = TRUE)
