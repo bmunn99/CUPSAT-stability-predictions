@@ -49,11 +49,11 @@ hpa_both_plot <- ggplot(hpa_both, aes(x = Gene.name, y = count, fill = Level)) +
   scale_fill_viridis(discrete = TRUE, option = "H", name = "Protein Score") +
   labs(x = "Protein", y = "Number of Tissues") +
   theme_minimal() +
-  theme(axis.text.x = element_text(size = 14),
-        axis.text.y = element_text(size = 12),  
-        axis.title.x = element_text(size = 20),
-        axis.title.y = element_text(size = 20),
-        legend.title = element_text(size = 12),
-        legend.text = element_text(size = 12))
+  theme(axis.text.x = element_text(size = 24),
+        axis.text.y = element_text(size = 24),  
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 28),
+        legend.title = element_text(size = 28),
+        legend.text = element_text(size = 24))
 hpa_both_plot
 ggsave('/Users/bmunn99/OneDrive/Clemson/Thesis Figures/HPA/Tissues Per Score.png', hpa_both_plot, dpi = 300)
